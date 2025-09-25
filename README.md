@@ -11,7 +11,7 @@ The navigation bar is responsive, changes style on scroll, highlights active lin
 - Fixed-position navigation bar visible on all pages.  
 - Changes background color and shadow when scrolled.  
 - Smooth hover effects with animated underline.  
-- Active link highlighting while scrolling through sections.  
+- Active link highlighting while scrolling through sections. 
 - Fully responsive with a collapsible hamburger menu for mobile devices.  
 
 ---
