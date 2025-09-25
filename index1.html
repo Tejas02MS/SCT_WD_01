@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Colorful Fixed Navigation</title>
+  <style>
+    :root{
+      --nav-height:70px;
+      --dark:#1f2937;
+      --light:#ffffff;
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:Segoe UI,Arial,Helvetica,sans-serif;background:#f9fafb;color:var(--dark);line-height:1.6}
+
+    /* Navigation */
+    header{position:fixed;top:0;left:0;width:100%;height:var(--nav-height);background:transparent;transition:background 0.3s, box-shadow 0.3s;z-index:999;display:flex;align-items:center;justify-content:center;}
+    header.scrolled{background:var(--light);box-shadow:0 2px 6px rgba(0,0,0,0.15)}
+
+    nav{max-width:1200px;width:100%;display:flex;justify-content:space-between;align-items:center;padding:0 20px;}
+    .logo{font-size:1.6rem;font-weight:bold;color:#111827;text-decoration:none}
+
+    .nav-links{display:flex;gap:24px;}
+    .nav-links a{color:var(--dark);text-decoration:none;font-weight:500;position:relative;transition:color 0.3s;}
+
+    /* Different colors per link */
+    .nav-links a[data-color="home"]::after{background:#2563eb;} /* blue */
+    .nav-links a[data-color="services"]::after{background:#16a34a;} /* green */
+    .nav-links a[data-color="portfolio"]::after{background:#9333ea;} /* purple */
+    .nav-links a[data-color="about"]::after{background:#f59e0b;} /* amber */
+    .nav-links a[data-color="contact"]::after{background:#dc2626;} /* red */
+
+    .nav-links a::after{content:"";position:absolute;left:0;bottom:-6px;width:100%;height:3px;transform:scaleX(0);transition:transform 0.3s ease;transform-origin:right;}
+    .nav-links a:hover::after{transform:scaleX(1);transform-origin:left;}
+    .nav-links a.active{font-weight:600}
+
+    /* Mobile */
+    .menu-toggle{display:none;flex-direction:column;cursor:pointer;gap:6px;}
+    .menu-toggle span{width:26px;height:3px;background:var(--dark);border-radius:2px;transition:0.3s}
+
+    .mobile-menu{display:none;flex-direction:column;position:absolute;top:var(--nav-height);right:20px;background:var(--light);box-shadow:0 4px 12px rgba(0,0,0,0.15);border-radius:8px;overflow:hidden;}
+    .mobile-menu a{padding:14px 22px;border-bottom:1px solid #eee;color:var(--dark);text-decoration:none;}
+    .mobile-menu a:hover{color:var(--light)}
+
+    /* Different hover bg for mobile */
+    .mobile-menu a[data-color="home"]:hover{background:#2563eb;}
+    .mobile-menu a[data-color="services"]:hover{background:#16a34a;}
+    .mobile-menu a[data-color="portfolio"]:hover{background:#9333ea;}
+    .mobile-menu a[data-color="about"]:hover{background:#f59e0b;}
+    .mobile-menu a[data-color="contact"]:hover{background:#dc2626;}
+
+    @media(max-width:768px){
+      .nav-links{display:none}
+      .menu-toggle{display:flex}
+      .mobile-menu.show{display:flex}
+    }
+
+    /* Page sections */
+    main{padding-top:calc(var(--nav-height) + 20px)}
+    section{min-height:100vh;padding:40px 20px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;}
+    section h1{margin-bottom:12px;font-size:2.2rem}
+  </style>
+</head>
+<body>
+  <header id="header">
+    <nav>
+      <a href="#home" class="logo">ColorBrand</a>
+      <div class="nav-links">
+        <a href="#home" data-color="home">Home</a>
+        <a href="#services" data-color="services">Services</a>
+        <a href="#portfolio" data-color="portfolio">Portfolio</a>
+        <a href="#about" data-color="about">About</a>
+        <a href="#contact" data-color="contact">Contact</a>
+      </div>
+      <div class="menu-toggle" id="menu-toggle">
+        <span></span><span></span><span></span>
+      </div>
+      <div class="mobile-menu" id="mobile-menu">
+        <a href="#home" data-color="home">Home</a>
+        <a href="#services" data-color="services">Services</a>
+        <a href="#portfolio" data-color="portfolio">Portfolio</a>
+        <a href="#about" data-color="about">About</a>
+        <a href="#contact" data-color="contact">Contact</a>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <section id="home" style="background:#dbeafe"><h1>Home</h1><p>Blue theme section</p></section>
+    <section id="services" style="background:#dcfce7"><h1>Services</h1><p>Green theme section</p></section>
+    <section id="portfolio" style="background:#f3e8ff"><h1>Portfolio</h1><p>Purple theme section</p></section>
+    <section id="about" style="background:#fef3c7"><h1>About Us</h1><p>Amber theme section</p></section>
+    <section id="contact" style="background:#fee2e2"><h1>Contact</h1><p>Red theme section</p></section>
+  </main>
+
+  <script>
+    // Change header background on scroll
+    const header = document.getElementById('header');
+    window.addEventListener('scroll',()=>{
+      if(window.scrollY > 20){header.classList.add('scrolled')}else{header.classList.remove('scrolled')}
+    });
+
+    // Mobile menu toggle
+    const toggle=document.getElementById('menu-toggle');
+    const mobileMenu=document.getElementById('mobile-menu');
+    toggle.addEventListener('click',()=>{
+      mobileMenu.classList.toggle('show');
+    });
+
+    // Active link highlighting
+    const links=document.querySelectorAll('nav a');
+    const sections=document.querySelectorAll('main section');
+    window.addEventListener('scroll',()=>{
+      let current="";
+      sections.forEach(sec=>{
+        const top=sec.offsetTop - header.offsetHeight;
+        if(pageYOffset >= top){current=sec.getAttribute('id');}
+      });
+      links.forEach(link=>{
+        link.classList.remove('active');
+        if(link.getAttribute('href')==="#"+current){link.classList.add('active')}
+      });
+    });
+  </script>
+</body>
+</html>
